@@ -6,7 +6,7 @@
 
     <groupId>com.softwareloop</groupId>
     <artifactId>tstconfig</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
     <properties>
         <commons.io.version>2.4</commons.io.version>
         <commons.lang.version>3.3.2</commons.lang.version>

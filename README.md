@@ -1,28 +1,72 @@
 Tstconfig description
 ====================
 
-Tstconfig is system administration tool that tests (a large number of) 
-configuration files automatically based on your definitions.
+Tstconfig is a system administration tool that tests (a large number of)
+configuration files automatically. Tstconfig looks at the configurations, checks
+that certain properties have the value that you expect, and reports 
+any discrepancies.
 
-The usage scenario is the following. Suppose you need to install a new
-LAMP system. You have to install certain packages, configure certain files,
-activate/deactivate certain services or modules. That's a lot of stuff to do.
-Steps are easily forgotten and errors can easily introduced.
+The main use for Tstconfig is to test that a Linux system is configured in
+a secure way in areas such as the firewall (ufw), fail2ban, sshd, apache,
+mysql, php, the system's users, etc...
 
-Also, when the system has been set up and has been running for a while, you
-may want to check its integrity, e.g. that configurations are still ok and that
-nobody has accidentally broken anything.
+### Running
+Tstconfig runs from the command line with the following syntax:
 
-This is a typical configuration management problem.
+    tstconfig [definition_file]...
 
-The approach Tstconfig takes is not to change the system, but rather to test
-the system's integrity. You still have to make the system modifications for
-yourself but you can trust Tstconfig to test that you've actually done 
-everything right.
+### Example definition
 
-For example, rather than setting up the firewall rules, Tstconfig tests that
-the rules are actually they are supposed to be. Rather than activating apache
-modules, it test that only the required modules are active.
+In `examples/sshd.tstconfig`:
 
-This makes Tstconfig a great aid for the initial system setup, but also a 
-QA assistant that keeps an eye on the system's integrity for you.
+    ################################################################################
+    # Test sshd configuration
+    ################################################################################
+    
+    # The location of the configuration file
+    file /etc/ssh/sshd_config
+    
+    # The syntax for parsing
+    syntax ssh
+    
+    # Check that root cannot login via ssh
+    property PermitRootLogin
+    assert_eq no
+    
+    # Check that only certain users can login via ssh
+    property AllowUsers
+    assert_eq your_user_name
+
+### Output
+
+Tstconfig's output is a report of the tests that passed or failed, with details
+on the tests that failed:
+
+    $ tstconfig examples/sshd.tstconfig
+    Tstconfig 0.1
+    
+    Reading definition file: examples/sshd.tstconfig
+    ASSERTION FAILED
+     File:      /etc/ssh/sshd_config
+     Property:  PermitRootLogin
+     Value:     yes
+     Assertion: assert_eq no
+    
+    ASSERTION FAILED
+     File:      /etc/ssh/sshd_config
+     Property:  AllowUsers
+     Value:     <undefined>
+     Assertion: assert_eq your_user_name
+    
+    
+    SUMMARY REPORT: FAIL
+    Assertions tested: 2
+    Assertions passed: 0
+    Assertions failed: 2
+    Errors: 0
+
+
+
+### Documentation
+
+* [Tstconfig introdution](http://softwareloop.com/tstconfig-automatic-configuration-testing-for-fun-and-security/)
