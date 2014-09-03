@@ -67,6 +67,10 @@ public class Test {
     List<String[]> section;
     String[] values;
 
+    int assertionsTested;
+    int assertionsFailed;
+    int errors;
+
     //--------------------------------------------------------------------------
     // Constructors
     //--------------------------------------------------------------------------
@@ -85,6 +89,7 @@ public class Test {
         try {
             lines = ConfigUtils.readLinesFromFile(filename);
         } catch (IOException e) {
+            errors++;
             System.out.println("ERROR: cannot read file.");
         }
     }
@@ -100,6 +105,7 @@ public class Test {
             int nLines = Integer.parseInt(nLinesStr);
             config.setSkipHeaderLines(nLines);
         } catch (NumberFormatException e) {
+            errors++;
             System.out.println("ERROR: not a number");
         }
     }
@@ -111,6 +117,7 @@ public class Test {
                 int current = Integer.parseInt(args[i]);
                 columnMap[i] = current;
             } catch (NumberFormatException e) {
+                errors++;
                 System.out.println("ERROR: not a number: " + args[i]);
             }
         }
@@ -176,6 +183,7 @@ public class Test {
         } else if ("ufw".equals(syntax)) {
             config = new UfwConfig();
         } else {
+            errors++;
             System.out.println("ERROR: unrecognized syntax: " + syntax);
         }
     }
@@ -221,6 +229,7 @@ public class Test {
         String sectionName = StringUtils.join(args, ' ');
         section = config.getSection(sectionName);
         if (section == null) {
+            errors++;
             System.out.println("ERROR: section is undefined");
             section = Collections.EMPTY_LIST;
         }
@@ -298,38 +307,49 @@ public class Test {
     //--------------------------------------------------------------------------
 
     public void assert_eq(final String... args) {
+        assertionsTested++;
         if (!Arrays.equals(args, values)) {
+            assertionsFailed++;
             System.out.println("ASSERTION FAILED on value: " + StringUtils.join(values, ' '));
         }
     }
 
     public void assert_defined(String... args) {
+        assertionsTested++;
         if (values == null) {
+            assertionsFailed++;
             System.out.println("ASSERTION FAILED");
         }
     }
 
     public void assert_undefined(String... args) {
+        assertionsTested++;
         if (values != null) {
+            assertionsFailed++;
             System.out.println("ASSERTION FAILED on value: " + StringUtils.join(values, ' '));
         }
     }
 
     public void assert_empty(String... args) {
+        assertionsTested++;
         String joinedValues = StringUtils.join(values, ' ');
         if (StringUtils.isNotEmpty(joinedValues)) {
+            assertionsFailed++;
             System.out.println("ASSERTION FAILED on value: " + joinedValues);
         }
     }
 
     public void assert_not_empty(String... args) {
+        assertionsTested++;
         String joinedValues = StringUtils.join(values, ' ');
         if (StringUtils.isEmpty(joinedValues)) {
+            assertionsFailed++;
             System.out.println("ASSERTION FAILED on value: " + joinedValues);
         }
     }
 
     public void assert_contains(String... args) {
+        assertionsTested++;
         Boolean success = true;
         for (String arg : args) {
             if (!ArrayUtils.contains(values, arg)) {
@@ -337,11 +357,13 @@ public class Test {
             }
         }
         if (!success) {
+            assertionsFailed++;
             System.out.println("ASSERTION FAILED on value: " + StringUtils.join(values, ' '));
         }
     }
 
     public void assert_not_contains(String... args) {
+        assertionsTested++;
         Boolean success = true;
         for (String arg : args) {
             if (ArrayUtils.contains(values, arg)) {
@@ -349,22 +371,27 @@ public class Test {
             }
         }
         if (!success) {
+            assertionsFailed++;
             System.out.println("ASSERTION FAILED on value: " + StringUtils.join(values, ' '));
         }
     }
 
     public void assert_starts_with(String... args) {
+        assertionsTested++;
         String joinedValues = StringUtils.join(values, ' ');
         String joinedArgs = StringUtils.join(values, ' ');
         if (!StringUtils.startsWith(joinedValues, joinedArgs)) {
+            assertionsFailed++;
             System.out.println("ASSERTION FAILED on value: " + joinedValues);
         }
     }
 
     public void assert_ends_with(String... args) {
+        assertionsTested++;
         String joinedValues = StringUtils.join(values, ' ');
         String joinedArgs = StringUtils.join(values, ' ');
         if (!StringUtils.endsWith(joinedValues, joinedArgs)) {
+            assertionsFailed++;
             System.out.println("ASSERTION FAILED on value: " + joinedValues);
         }
     }
@@ -378,4 +405,24 @@ public class Test {
     // Getters/setters
     //--------------------------------------------------------------------------
 
+
+    public int getAssertionsTested() {
+        return assertionsTested;
+    }
+
+    public int getAssertionsFailed() {
+        return assertionsFailed;
+    }
+
+    public int getAssertionsPassed() {
+        return assertionsTested - assertionsFailed;
+    }
+
+    public int getErrors() {
+        return errors;
+    }
+
+    boolean isTestPass() {
+        return assertionsFailed == 0 && errors == 0;
+    }
 }

@@ -20,6 +20,8 @@ public class Parser extends Config {
 
     final Test test;
 
+    boolean echoEnabled;
+
     //--------------------------------------------------------------------------
     // Constructors
     //--------------------------------------------------------------------------
@@ -41,10 +43,13 @@ public class Parser extends Config {
 
     @Override
     public void parseLine(String line) {
-        System.out.println(line);
+        if (echoEnabled) {
+            System.out.println(line);
+        }
         super.parseLine(line);
     }
 
+    @Override
     public void storeLine(String[] line) {
         String command = line[0];
         String[] args = Arrays.copyOfRange(line, 1, line.length);
@@ -61,7 +66,7 @@ public class Parser extends Config {
         }
     }
 
-//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Methods
     //--------------------------------------------------------------------------
 
@@ -74,4 +79,12 @@ public class Parser extends Config {
     // Getters/setters
     //--------------------------------------------------------------------------
 
+
+    public boolean isEchoEnabled() {
+        return echoEnabled;
+    }
+
+    public void setEchoEnabled(boolean echoEnabled) {
+        this.echoEnabled = echoEnabled;
+    }
 }
