@@ -1,0 +1,17 @@
+################################################################################
+# Test the static host entries
+################################################################################
+
+# The configuration file
+file /etc/hosts
+
+# The syntax to use
+syntax etc_hosts
+
+# Test localhost
+property 127.0.0.1
+assert_eq localhost
+
+# Test your hostname
+property 127.0.1.1
+assert_contains your_hostname

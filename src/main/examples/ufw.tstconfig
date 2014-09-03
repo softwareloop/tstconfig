@@ -1,0 +1,40 @@
+################################################################################
+# Test that the firewall is enabled and configured for ssh/http/https
+################################################################################
+
+# The command to retrieve the firewall status
+command sudo /usr/sbin/ufw status verbose
+
+# The syntax for parsing
+syntax ufw
+
+## Header section
+
+# Check that the firewall is active
+property Status
+assert_eq active
+
+# Check the default rules
+property Default
+assert_eq "deny (incoming), allow (outgoing), disabled (routed)"
+
+## Now move to the rules section
+section rules
+
+# Check that ssh is limited
+property 22
+assert_eq "LIMIT IN" Anywhere
+property 22 (v6)
+assert_eq "LIMIT IN" "Anywhere (v6)"
+
+# Check that http is allowed
+property 80/tcp
+assert_eq "ALLOW IN" Anywhere
+property 80/tcp (v6)
+assert_eq "ALLOW IN" "Anywhere (v6)"
+
+# Check that https is allowed
+property 443
+assert_eq "ALLOW IN" Anywhere
+property 443 (v6)
+assert_eq "ALLOW IN" "Anywhere (v6)"

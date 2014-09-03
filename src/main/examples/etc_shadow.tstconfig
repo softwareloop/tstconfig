@@ -1,0 +1,91 @@
+################################################################################
+# Test the system passwords
+################################################################################
+
+# The configuration file is /etc/shadow but, since it's not readable by
+# everyone, read it via a sudo command
+command sudo cat /etc/shadow
+
+# The syntax for parsing
+syntax etc_shadow
+
+# Check that there are exactly 25 users
+section_size
+assert_eq 25
+
+# We're interested only in the login and password columns
+columns 0 1
+
+## Now test that the privileged system users (root, daemon, etc) are disabled
+
+property root
+assert_eq !
+
+property daemon
+assert_eq *
+
+property bin
+assert_eq *
+
+property sys
+assert_eq *
+
+property sync
+assert_eq *
+
+property games
+assert_eq *
+
+property man
+assert_eq *
+
+property lp
+assert_eq *
+
+property mail
+assert_eq *
+
+property news
+assert_eq *
+
+property uucp
+assert_eq *
+
+property proxy
+assert_eq *
+
+property www-data
+assert_eq *
+
+property backup
+assert_eq *
+
+property list
+assert_eq *
+
+property irc
+assert_eq *
+
+property gnats
+assert_eq *
+
+property nobody
+assert_eq *
+
+property libuuid
+assert_eq !
+
+property syslog
+assert_eq *
+
+property messagebus
+assert_eq *
+
+property sshd
+assert_eq *
+
+property mysql
+assert_eq !
+
+property colord
+assert_eq *

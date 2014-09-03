@@ -1,0 +1,16 @@
+################################################################################
+# Test that a partition is active for swap
+################################################################################
+
+# The command to retrieve swap information
+command sudo swapon -s
+
+# The syntax for parsing
+syntax swapon
+
+# We're interested in Filename, Type, Size and Priority
+columns 0 1 2 4
+
+# Check that a partition is used for swap, of size 522236, and of priority -1
+property /dev/sda5
+assert_eq partition 522236 -1

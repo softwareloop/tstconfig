@@ -1,0 +1,161 @@
+################################################################################
+# Test various apache configurations
+################################################################################
+
+# The main apache configuration file
+file /etc/apache2/apache2.conf
+
+# The syntax for parsing
+syntax apache
+
+# Select a section
+section "Directory /var/www/"
+
+# Check a property within the section
+property AllowOverride
+assert_eq None
+
+
+## Test that index.php is the default for directories
+
+# mod_dir configuration file
+file /etc/apache2/mods-available/dir.conf
+
+# The syntax for parsing
+syntax apache
+
+# Select the section
+section "IfModule mod_dir.c"
+
+# Check the property
+property DirectoryIndex
+assert_eq index.php index.html index.cgi index.pl index.xhtml index.htm
+
+
+## Test the active modules
+
+# Command to retrieve the list of modules
+command sudo apache2ctl -M
+
+# The syntax to use
+syntax tokenized
+
+# Skip the first header line
+skip_header_lines 1
+
+# Check that exactly 27 modules are listed
+section_size
+assert_eq 27
+
+# Now check that the modules one by one: core, so, watchdog, etc...
+
+property core_module
+assert_not_empty
+
+property so_module
+assert_not_empty
+
+property watchdog_module
+assert_not_empty
+
+property http_module
+assert_not_empty
+
+property log_config_module
+assert_not_empty
+
+property logio_module
+assert_not_empty
+
+property version_module
+assert_not_empty
+
+property unixd_module
+assert_not_empty
+
+property access_compat_module
+assert_not_empty
+
+property alias_module
+assert_not_empty
+
+property authn_core_module
+assert_not_empty
+
+property authz_core_module
+assert_not_empty
+
+property authz_host_module
+assert_not_empty
+
+property autoindex_module
+assert_not_empty
+
+property deflate_module
+assert_not_empty
+
+property dir_module
+assert_not_empty
+
+property expires_module
+assert_not_empty
+
+property filter_module
+assert_not_empty
+
+property headers_module
+assert_not_empty
+
+property mime_module
+assert_not_empty
+
+property mpm_prefork_module
+assert_not_empty
+
+property negotiation_module
+assert_not_empty
+
+property php5_module
+assert_not_empty
+
+property rewrite_module
+assert_not_empty
+
+property setenvif_module
+assert_not_empty
+
+property socache_shmcb_module
+assert_not_empty
+
+property ssl_module
+assert_not_empty
+
+
+## Test the mpm_prefork configuration
+
+# The configuration file
+file /etc/apache2/mods-available/mpm_prefork.conf
+
+# The syntax for parsing
+syntax apache
+
+# Select the section
+section "IfModule mpm_prefork_module"
+
+# Check StartServer, MinSpareServers, etc...
+
+property StartServers
+assert_eq 1
+
+property MinSpareServers
+assert_eq 5
+
+property MaxSpareServers
+assert_eq 10
+
+property MaxRequestWorkers
+assert_eq 50
+
+property MaxConnectionsPerChild
+assert_eq 1000
+

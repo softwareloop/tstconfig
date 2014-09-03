@@ -1,0 +1,14 @@
+################################################################################
+# Test the user's current umask
+################################################################################
+
+# The command to query the umask
+# Notice that umask is a bash command, not a standalone executable
+command bash -c umask
+
+# The syntax for parsing
+syntax tokenized
+
+# The output is really just a string. Treat it as a property
+property 0022
+assert_defined

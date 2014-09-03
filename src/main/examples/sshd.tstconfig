@@ -1,0 +1,17 @@
+################################################################################
+# Test sshd configuration
+################################################################################
+
+# The location of the configuration file
+file /etc/ssh/sshd_config
+
+# The syntax for parsing
+syntax ssh
+
+# Check that root cannot login via ssh
+property PermitRootLogin
+assert_eq no
+
+# Check that only certain users can login via ssh
+property AllowUsers
+assert_eq your_user_name

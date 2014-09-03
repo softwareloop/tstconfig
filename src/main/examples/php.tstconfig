@@ -1,0 +1,53 @@
+################################################################################
+# Test php for basin hardened configuration
+################################################################################
+
+# Php's configuration file for apache
+file /etc/php5/apache2/php.ini
+
+# The syntax for parsing
+syntax ini
+
+# PHP is the main section
+section PHP
+
+# Check that the server does not reveal the php version
+property expose_php
+assert_eq Off
+
+# Check that the server does not reveal error messages to the client
+property display_errors
+assert_eq Off
+
+# Check that logging is enabled
+property log_errors
+assert_eq On
+
+# Check that logging goes to apache's standard error log
+property error_log
+assert_undefined
+
+# Check that file uploads are allowed
+property file_uploads
+assert_eq On
+
+# Check that upload size is limited
+property upload_max_filesize
+assert_eq 2M
+
+# Check that scripts don't run for too long
+property max_execution_time
+assert_eq 30
+
+# Check that request reading does not run for too long
+property max_input_time
+assert_eq 30
+
+# Check that memory usage is limited
+property memory_limit
+assert_eq 40M
+
+# Check that potentially dangerous functions are disabled
+property disable_functions
+assert_eq pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,
+

@@ -1,0 +1,15 @@
+################################################################################
+# Test the system users
+################################################################################
+
+# Configuration file
+file /etc/passwd
+
+# The syntax to use
+syntax etc_passwd
+
+# Check that there are exactly 25 users
+section_size
+assert_eq 25
+
+# Here you may want to add assertions to check users one by one

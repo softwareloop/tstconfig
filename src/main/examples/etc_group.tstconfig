@@ -1,0 +1,28 @@
+################################################################################
+# Test the system groups
+################################################################################
+
+# System groups file
+file /etc/group
+
+# The syntax for parsing
+syntax etc_group
+
+# Just interested in login and users
+columns 0 3
+
+# Check that nobody is in the root group
+property root
+assert_empty
+
+# Check the members of adm
+property adm
+assert_eq syslog,your_username
+
+# Check the sudoers
+property sudo
+assert_eq your_username
+
+# Check the apache group members
+property www-data
+assert_eq your_username

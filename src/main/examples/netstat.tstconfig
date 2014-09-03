@@ -1,0 +1,55 @@
+################################################################################
+# Test that the only listening ports are ssh, http and https
+################################################################################
+
+# The command to retrieve the list of listening ports
+command sudo netstat -plnt
+
+# the syntax for parsing
+syntax fixed
+
+# a fixed-position table
+positions 6 13 20 44 68 80
+
+# Ignore the first two header lines
+skip_header_lines 2
+
+# Check that there are exactly four ports listening
+section_size
+assert_eq 4
+
+# Just interested in Local Address, Proto, Foreign Address and State
+columns 3 0 4 5
+
+# Check ssh
+property 0.0.0.0:22
+assert_eq tcp 0.0.0.0:* LISTEN
+
+# Check ssh on tcp-ip v6
+property :::22
+assert_eq tcp6 :::* LISTEN
+
+# Check http
+property :::80
+assert_eq tcp6 :::* LISTEN
+
+# Check https
+property :::443
+assert_eq tcp6 :::* LISTEN
+
+
+# Now we're interested in Local Address and PID/Program name
+columns 3 6
+
+## Check the owner process name
+property 0.0.0.0:22
+assert_ends_with /sshd
+
+property :::22
+assert_ends_with /sshd
+
+property :::80
+assert_ends_with /apache2
+
+property :::443
+assert_ends_with /apache2

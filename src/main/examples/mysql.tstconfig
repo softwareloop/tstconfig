@@ -1,0 +1,16 @@
+################################################################################
+# Test mysql
+################################################################################
+
+# The configuration file
+file /etc/mysql/my.cnf
+
+# The syntax for parsing
+syntax ini
+
+# mysqld is the main section
+section mysqld
+
+# Check that tcp-ip netowrking is disabled
+property skip-networking
+assert_defined

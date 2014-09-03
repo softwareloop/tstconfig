@@ -1,0 +1,20 @@
+################################################################################
+# Test fail2ban
+################################################################################
+
+# The configuration file
+file /etc/fail2ban/jail.conf
+
+# The syntax for parsing
+syntax fail2ban
+
+# Select the ssh section
+section ssh
+
+# Check that ssh monitored
+property enabled
+assert_eq true
+
+# Check the maximum allowed number of ssh failed attempts
+property maxretry
+assert_eq 3
