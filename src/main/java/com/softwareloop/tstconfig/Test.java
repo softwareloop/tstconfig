@@ -63,8 +63,12 @@ public class Test {
     int[] columnMap;
     DuplicatesPolicy duplicatesPolicy;
 
+    String filename;
+    String commandLine;
     Config config;
+    String sectionName;
     List<String[]> section;
+    String propertyName;
     String[] values;
 
     int assertionsTested;
@@ -85,17 +89,19 @@ public class Test {
 
     public void file(String... args) {
         resetConfig();
-        String filename = StringUtils.join(args, ' ');
+        filename = StringUtils.join(args, ' ');
         try {
             lines = ConfigUtils.readLinesFromFile(filename);
         } catch (IOException e) {
             errors++;
-            System.out.println("ERROR: cannot read file.");
+            System.out.println("ERROR: cannot read file: " + filename);
+            System.out.println();
         }
     }
 
     public void command(String... args) {
         resetConfig();
+        commandLine = StringUtils.join(args, ' ');
         lines = ConfigUtils.readLinesFromCommand(args);
     }
 
@@ -106,7 +112,8 @@ public class Test {
             config.setSkipHeaderLines(nLines);
         } catch (NumberFormatException e) {
             errors++;
-            System.out.println("ERROR: not a number");
+            System.out.println("ERROR: not a number: " + nLinesStr);
+            System.out.println();
         }
     }
 
@@ -119,11 +126,16 @@ public class Test {
             } catch (NumberFormatException e) {
                 errors++;
                 System.out.println("ERROR: not a number: " + args[i]);
+                System.out.println();
             }
         }
     }
 
     void resetConfig() {
+        filename = null;
+        commandLine = null;
+        sectionName = null;
+        propertyName = null;
         lines = Collections.EMPTY_LIST;
         config = new Config();
         linesParsed = false;
@@ -185,6 +197,7 @@ public class Test {
         } else {
             errors++;
             System.out.println("ERROR: unrecognized syntax: " + syntax);
+            System.out.println();
         }
     }
 
@@ -226,11 +239,12 @@ public class Test {
 
     public void section(String... args) {
         ensureConfigInitialized();
-        String sectionName = StringUtils.join(args, ' ');
+        sectionName = StringUtils.join(args, ' ');
         section = config.getSection(sectionName);
         if (section == null) {
             errors++;
-            System.out.println("ERROR: section is undefined");
+            System.out.println("ERROR: section is undefined: " + sectionName);
+            System.out.println();
             section = Collections.EMPTY_LIST;
         }
     }
@@ -248,7 +262,7 @@ public class Test {
     public void property(String... args) {
         ensureConfigInitialized();
         values = null;
-        final String propertyName = StringUtils.join(args, ' ');
+        propertyName = StringUtils.join(args, ' ');
         boolean first = true;
         for (String[] line : section) {
             String firstColumn = getMappedColumn(line, 0);
@@ -309,24 +323,21 @@ public class Test {
     public void assert_eq(final String... args) {
         assertionsTested++;
         if (!Arrays.equals(args, values)) {
-            assertionsFailed++;
-            System.out.println("ASSERTION FAILED on value: " + StringUtils.join(values, ' '));
+            assertionFailed("assert_eq", args);
         }
     }
 
     public void assert_defined(String... args) {
         assertionsTested++;
         if (values == null) {
-            assertionsFailed++;
-            System.out.println("ASSERTION FAILED");
+            assertionFailed("assert_defined");
         }
     }
 
     public void assert_undefined(String... args) {
         assertionsTested++;
         if (values != null) {
-            assertionsFailed++;
-            System.out.println("ASSERTION FAILED on value: " + StringUtils.join(values, ' '));
+            assertionFailed("assert_undefined");
         }
     }
 
@@ -334,8 +345,7 @@ public class Test {
         assertionsTested++;
         String joinedValues = StringUtils.join(values, ' ');
         if (StringUtils.isNotEmpty(joinedValues)) {
-            assertionsFailed++;
-            System.out.println("ASSERTION FAILED on value: " + joinedValues);
+            assertionFailed("assert_empty");
         }
     }
 
@@ -343,8 +353,7 @@ public class Test {
         assertionsTested++;
         String joinedValues = StringUtils.join(values, ' ');
         if (StringUtils.isEmpty(joinedValues)) {
-            assertionsFailed++;
-            System.out.println("ASSERTION FAILED on value: " + joinedValues);
+            assertionFailed("assert_not_empty");
         }
     }
 
@@ -357,8 +366,7 @@ public class Test {
             }
         }
         if (!success) {
-            assertionsFailed++;
-            System.out.println("ASSERTION FAILED on value: " + StringUtils.join(values, ' '));
+            assertionFailed("assert_contains", args);
         }
     }
 
@@ -371,8 +379,7 @@ public class Test {
             }
         }
         if (!success) {
-            assertionsFailed++;
-            System.out.println("ASSERTION FAILED on value: " + StringUtils.join(values, ' '));
+            assertionFailed("assert_not_contains", args);
         }
     }
 
@@ -381,8 +388,7 @@ public class Test {
         String joinedValues = StringUtils.join(values, ' ');
         String joinedArgs = StringUtils.join(values, ' ');
         if (!StringUtils.startsWith(joinedValues, joinedArgs)) {
-            assertionsFailed++;
-            System.out.println("ASSERTION FAILED on value: " + joinedValues);
+            assertionFailed("assert_starts_with", args);
         }
     }
 
@@ -391,11 +397,44 @@ public class Test {
         String joinedValues = StringUtils.join(values, ' ');
         String joinedArgs = StringUtils.join(values, ' ');
         if (!StringUtils.endsWith(joinedValues, joinedArgs)) {
-            assertionsFailed++;
-            System.out.println("ASSERTION FAILED on value: " + joinedValues);
+            assertionFailed("assert_ends_with", args);
         }
     }
 
+    public void assertionFailed(String cmd, String... args) {
+        assertionsFailed++;
+        System.out.println("ASSERTION FAILED");
+
+        if (filename != null) {
+            System.out.println(String.format(" File:      %s", filename));
+        } else if (commandLine != null) {
+            System.out.println(String.format(" Command:   %s", commandLine));
+        }
+
+        if (sectionName != null) {
+            System.out.println(String.format(" Section:   %s", sectionName));
+        }
+
+        if (propertyName != null) {
+            System.out.println(String.format(" Property:  %s", propertyName));
+        }
+
+        if (values == null) {
+            System.out.println(" Value:     <undefined>");
+        } else {
+            System.out.println(
+                    String.format(
+                            " Value:     %s",
+                            StringUtils.join(values)));
+        }
+
+        System.out.println(
+                String.format(
+                        " Assertion: %s %s",
+                        cmd,
+                        StringUtils.join(args, ' ')));
+        System.out.println();
+    }
 
     //--------------------------------------------------------------------------
     // Abstract methods
