@@ -25,6 +25,12 @@
             </includes>
             <fileMode>0755</fileMode>
         </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/examples</directory>
+            <outputDirectory>/examples</outputDirectory>
+            <fileMode>0644</fileMode>
+            <directoryMode>0755</directoryMode>
+        </fileSet>
     </fileSets>
     <dependencySets>
         <dependencySet>

@@ -425,7 +425,7 @@ public class Test {
             System.out.println(
                     String.format(
                             " Value:     %s",
-                            StringUtils.join(values)));
+                            StringUtils.join(values, ' ')));
         }
 
         System.out.println(

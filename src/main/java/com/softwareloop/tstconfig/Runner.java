@@ -58,6 +58,7 @@ public class Runner {
         Test test = new Test();
         Parser parser = new Parser(test);
         for (String filename : args) {
+            System.out.println();
             System.out.println(
                     String.format("Reading definition file: %s", filename));
             try {
