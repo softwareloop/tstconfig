@@ -15,6 +15,15 @@
                 <include>README.md</include>
                 <include>LICENSE</include>
             </includes>
+            <fileMode>0644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/bin</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>tstconfig</include>
+            </includes>
+            <fileMode>0755</fileMode>
         </fileSet>
     </fileSets>
     <dependencySets>
