@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by predo on 13/08/14.
+ * @author Paolo Predonzani (paolo.predonzani@gmail.com)
  */
 public class ConfigUtils {
 
@@ -31,8 +31,7 @@ public class ConfigUtils {
     }
 
     public static List<String> readLinesFromFile(
-            String filename,
-            String encoding
+            String filename, String encoding
     ) throws IOException {
         List<String> lines = new ArrayList<String>();
         File file = new File(filename);
@@ -54,8 +53,7 @@ public class ConfigUtils {
     }
 
     public static List<String> readLinesFromCommand(
-            int sleepMillis,
-            String... cmdArray
+            int sleepMillis, String... cmdArray
     ) {
         Command command = new Command(DEFAULT_ENCODING, cmdArray);
         command.execute();
@@ -66,7 +64,9 @@ public class ConfigUtils {
         }
         Integer exitValue = command.getExitValue();
         if (exitValue != 0) {
-            System.out.println("ERROR: Command returned error code: " + exitValue);
+            System.out.println(
+                    "ERROR: Command returned error code: " + exitValue
+            );
         }
         String stderr = command.getStderr();
         if (!stderr.isEmpty()) {

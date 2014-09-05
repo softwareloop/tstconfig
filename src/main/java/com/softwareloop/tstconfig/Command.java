@@ -1,7 +1,7 @@
 package com.softwareloop.tstconfig;
 
 /**
- * Created by predo on 13/08/14.
+ * @author Paolo Predonzani (paolo.predonzani@gmail.com)
  */
 public class Command {
 
@@ -13,12 +13,12 @@ public class Command {
     // Fields
     //--------------------------------------------------------------------------
 
-    final String encoding;
+    final String   encoding;
     final String[] cmdArray;
 
-    String stdout;
-    String stderr;
-    Integer exitValue;
+    String    stdout;
+    String    stderr;
+    Integer   exitValue;
     Throwable throwable;
 
 

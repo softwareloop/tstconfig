@@ -3,7 +3,7 @@ package com.softwareloop.tstconfig;
 import java.util.ArrayList;
 
 /**
- * Created by predo on 14/08/14.
+ * @author Paolo Predonzani (paolo.predonzani@gmail.com)
  */
 public class UfwConfig extends Config {
 

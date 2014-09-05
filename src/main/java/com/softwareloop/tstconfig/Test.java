@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Created by predo on 27/08/14.
+ * @author Paolo Predonzani (paolo.predonzani@gmail.com)
  */
 public class Test {
 
@@ -33,8 +33,7 @@ public class Test {
 
     public final static String APACHE_SECTION_HEADER_REGEXP =
             "^\\s*<(.*)>\\s*$";
-    public final static String APACHE_SECTION_FOOTER_REGEXP =
-            "^\\s*</.*>\\s*$";
+    public final static String APACHE_SECTION_FOOTER_REGEXP = "^\\s*</.*>\\s*$";
 
     public final static Pattern APACHE_SECTION_HEADER_PATTERN =
             Pattern.compile(APACHE_SECTION_HEADER_REGEXP);
@@ -43,8 +42,7 @@ public class Test {
 
     public final static String APT_SECTION_HEADER_REGEX =
             "^\\s*(\\S+)\\s*\\{\\s*$";
-    public final static String APT_SECTION_FOOTER_REGEX =
-            "^\\s*\\}\\s*;\\s*$";
+    public final static String APT_SECTION_FOOTER_REGEX = "^\\s*\\}\\s*;\\s*$";
 
     public final static Pattern APT_SECTION_HEADER_PATTERN =
             Pattern.compile(APT_SECTION_HEADER_REGEX);
@@ -59,16 +57,16 @@ public class Test {
     //--------------------------------------------------------------------------
 
     List<String> lines;
-    boolean linesParsed;
-    int[] columnMap;
+    boolean      linesParsed;
+    int[]        columnMap;
     DuplicatesPolicy duplicatesPolicy;
 
-    String filename;
-    String commandLine;
-    Config config;
-    String sectionName;
+    String   filename;
+    String   commandLine;
+    Config   config;
+    String   sectionName;
     List<String[]> section;
-    String propertyName;
+    String   propertyName;
     String[] values;
 
     int assertionsTested;
@@ -158,9 +156,8 @@ public class Test {
             config.setSectionFooterPattern(APT_SECTION_FOOTER_PATTERN);
             config.setSeparator(StrMatcher.charSetMatcher(" \t;"));
             config.setSlashCommentAllowed(true);
-        } else if ("etc_group".equals(syntax)
-                || "etc_passwd".equals(syntax)
-                || "etc_shadow".equals(syntax)) {
+        } else if ("etc_group".equals(syntax) || "etc_passwd".equals(syntax) ||
+                   "etc_shadow".equals(syntax)) {
             config.setParseMode(Config.ParseMode.TOKENIZED);
             config.setSeparator(COLON_SEPARATOR);
             config.setHashCommentAllowed(true);
@@ -292,7 +289,7 @@ public class Test {
         } else {
             String[] result = new String[columnMap.length - 1];
             for (int i = 1; i < columnMap.length; i++) {
-                result[i-1] = getMappedColumn(current, i);
+                result[i - 1] = getMappedColumn(current, i);
             }
             return result;
         }
@@ -309,7 +306,7 @@ public class Test {
     }
 
     public String safeArrayGet(String[] array, int index) {
-        if (array.length <= index ) {
+        if (array.length <= index) {
             return null;
         } else {
             return array[index];
@@ -424,15 +421,16 @@ public class Test {
         } else {
             System.out.println(
                     String.format(
-                            " Value:     %s",
-                            StringUtils.join(values, ' ')));
+                            " Value:     %s", StringUtils.join(values, ' ')
+                    )
+            );
         }
 
         System.out.println(
                 String.format(
-                        " Assertion: %s %s",
-                        cmd,
-                        StringUtils.join(args, ' ')));
+                        " Assertion: %s %s", cmd, StringUtils.join(args, ' ')
+                )
+        );
         System.out.println();
     }
 

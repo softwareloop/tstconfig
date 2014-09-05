@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by predo on 27/08/14.
+ * @author Paolo Predonzani (paolo.predonzani@gmail.com)
  */
 public class Config {
 
@@ -30,9 +30,9 @@ public class Config {
     public final static String SLASH_COMMENT_REGEX     = "^\\s*//.*$";
     public final static String SEMICOLON_COMMENT_REGEX = "^\\s*;.*$";
 
-    public final static Pattern HASH_COMMENT_PATTERN =
+    public final static Pattern HASH_COMMENT_PATTERN      =
             Pattern.compile(HASH_COMMENT_REGEX);
-    public final static Pattern SLASH_COMMENT_PATTERN =
+    public final static Pattern SLASH_COMMENT_PATTERN     =
             Pattern.compile(SLASH_COMMENT_REGEX);
     public final static Pattern SEMICOLON_COMMENT_PATTERN =
             Pattern.compile(SEMICOLON_COMMENT_REGEX);
@@ -61,7 +61,7 @@ public class Config {
     Pattern sectionHeaderPattern;
     Pattern sectionFooterPattern;
 
-    String     keySeparator;
+    String keySeparator;
     boolean    keySeparatorOptional = DEFAULT_KEY_SEPARATOR_OPTIONAL;
     StrMatcher separator            = DEFAULT_SEPARATOR;
     boolean    ignoreEmptyTokens    = DEFAULT_IGNORE_EMPTY_TOKENS;
@@ -113,7 +113,7 @@ public class Config {
         }
         if (isBlankLine(line)) {
             parseBlankLine(line);
-        } else if (isCommentLine(line))  {
+        } else if (isCommentLine(line)) {
             parseCommentLine(line);
         } else {
             parseSectionLine(line);
@@ -135,11 +135,10 @@ public class Config {
             sectionFooterMatcher = sectionFooterPattern.matcher(line);
         }
 
-        if (sectionFooterMatcher != null
-                && sectionFooterMatcher.matches()) {
+        if (sectionFooterMatcher != null && sectionFooterMatcher.matches()) {
             currentSection = topLevelSection;
-        } else if (sectionHeaderMatcher != null
-                && sectionHeaderMatcher.matches()) {
+        } else if (sectionHeaderMatcher != null &&
+                   sectionHeaderMatcher.matches()) {
             String sectionName = sectionHeaderMatcher.group(1);
             currentSection = sections.get(sectionName);
             if (currentSection == null) {
@@ -213,15 +212,15 @@ public class Config {
         } else {
             key = line.substring(0, keySeparatorIndex).trim();
             valueString = line.substring(
-                    keySeparatorIndex + keySeparator.length()).trim();
+                    keySeparatorIndex + keySeparator.length()
+            ).trim();
         }
 
         String[] values;
         if (separator == null) {
-            values = new String[] {valueString};
+            values = new String[]{valueString};
         } else {
-            StrTokenizer tokenizer =
-                    new StrTokenizer(valueString, separator);
+            StrTokenizer tokenizer = new StrTokenizer(valueString, separator);
             values = tokenizer.getTokenArray();
         }
 

@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
- * Created by predo on 27/08/14.
+ * @author Paolo Predonzani (paolo.predonzani@gmail.com)
  */
 public class Parser extends Config {
 
@@ -55,7 +55,7 @@ public class Parser extends Config {
         String[] args = Arrays.copyOfRange(line, 1, line.length);
         try {
             Method method = test.getClass().getMethod(command, String[].class);
-            method.invoke(test, new Object[] {args});
+            method.invoke(test, new Object[]{args});
         } catch (Throwable e) {
             Throwable rootException = ExceptionUtils.getRootCause(e);
             if (rootException == null) {

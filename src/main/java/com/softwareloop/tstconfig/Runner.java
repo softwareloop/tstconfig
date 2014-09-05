@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by predo on 27/08/14.
+ * @author Paolo Predonzani (paolo.predonzani@gmail.com)
  */
 public class Runner {
 
@@ -60,10 +60,10 @@ public class Runner {
         for (String filename : args) {
             System.out.println();
             System.out.println(
-                    String.format("Reading definition file: %s", filename));
+                    String.format("Reading definition file: %s", filename)
+            );
             try {
-                List<String> lines =
-                        ConfigUtils.readLinesFromFile(filename);
+                List<String> lines = ConfigUtils.readLinesFromFile(filename);
                 parser.parseLines(lines);
             } catch (IOException e) {
                 e.printStackTrace(System.out);
@@ -71,27 +71,31 @@ public class Runner {
         }
 
         System.out.println();
-        if (test.isTestPass() ) {
+        if (test.isTestPass()) {
             System.out.println("SUMMARY REPORT: PASS");
         } else {
             System.out.println("SUMMARY REPORT: FAIL");
         }
         System.out.println(
                 String.format(
-                        "Assertions tested: %d",
-                        test.getAssertionsTested()));
+                        "Assertions tested: %d", test.getAssertionsTested()
+                )
+        );
         System.out.println(
                 String.format(
-                        "Assertions passed: %d",
-                        test.getAssertionsPassed()));
+                        "Assertions passed: %d", test.getAssertionsPassed()
+                )
+        );
         System.out.println(
                 String.format(
-                        "Assertions failed: %d",
-                        test.getAssertionsFailed()));
+                        "Assertions failed: %d", test.getAssertionsFailed()
+                )
+        );
         System.out.println(
                 String.format(
-                        "Errors: %d",
-                        test.getErrors()));
+                        "Errors: %d", test.getErrors()
+                )
+        );
     }
 
     //--------------------------------------------------------------------------

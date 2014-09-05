@@ -5,7 +5,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 
 /**
- * Created by predo on 14/08/14.
+ * @author Paolo Predonzani (paolo.predonzani@gmail.com)
  */
 public class ReaderThread extends Thread {
 
@@ -25,8 +25,7 @@ public class ReaderThread extends Thread {
     //--------------------------------------------------------------------------
 
     public ReaderThread(
-            InputStream inputStream,
-            String encoding
+            InputStream inputStream, String encoding
     ) throws UnsupportedEncodingException {
         this.reader = new InputStreamReader(inputStream, encoding);
         buffer = new StringWriter();
