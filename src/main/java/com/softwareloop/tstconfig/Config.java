@@ -21,9 +21,9 @@ public class Config {
     //--------------------------------------------------------------------------
 
     public enum ParseMode {
-        TOKENIZED,
-        FIXED,
-        KEYVALUE
+        tokenized,
+        fixed,
+        keyvalue
     }
 
     public final static String HASH_COMMENT_REGEX      = "^\\s*#.*$";
@@ -186,13 +186,13 @@ public class Config {
 
     public void parseConfigLine(String line) {
         switch (parseMode) {
-            case TOKENIZED:
+            case tokenized:
                 parseTokenized(line);
                 break;
-            case FIXED:
+            case fixed:
                 parseFixed(line);
                 break;
-            case KEYVALUE:
+            case keyvalue:
                 parseKeyValue(line);
                 break;
         }
@@ -357,5 +357,11 @@ public class Config {
         this.keySeparatorOptional = keySeparatorOptional;
     }
 
+    public char getQuoteChar() {
+        return quoteChar;
+    }
 
+    public void setQuoteChar(char quoteChar) {
+        this.quoteChar = quoteChar;
+    }
 }

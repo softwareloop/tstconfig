@@ -18,7 +18,7 @@ public class ReaderThread extends Thread {
     //--------------------------------------------------------------------------
 
     final InputStreamReader reader;
-    final StringWriter buffer;
+    final StringWriter      buffer;
 
     //--------------------------------------------------------------------------
     // Constructors

@@ -28,7 +28,7 @@ public class Parser extends Config {
 
     public Parser(Test test) {
         this.test = test;
-        setParseMode(ParseMode.TOKENIZED);
+        setParseMode(ParseMode.tokenized);
         setHashCommentAllowed(true);
     }
 

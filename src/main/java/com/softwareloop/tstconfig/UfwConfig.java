@@ -27,7 +27,7 @@ public class UfwConfig extends Config {
     //--------------------------------------------------------------------------
 
     public UfwConfig() {
-        setParseMode(ParseMode.KEYVALUE);
+        setParseMode(ParseMode.keyvalue);
         setKeySeparator(":");
         setSeparator(null);
         state = State.HEADER;
@@ -42,7 +42,7 @@ public class UfwConfig extends Config {
     @Override
     public void parseBlankLine(String line) {
         if (state == State.HEADER) {
-            setParseMode(ParseMode.FIXED);
+            setParseMode(ParseMode.fixed);
             setPositions(27, 39);
             state = State.RULES;
             currentSection = sections.get("rules");

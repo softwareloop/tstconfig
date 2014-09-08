@@ -2,6 +2,7 @@ package com.softwareloop.tstconfig;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrMatcher;
 
@@ -21,9 +22,9 @@ public class Test {
     //--------------------------------------------------------------------------
 
     enum DuplicatesPolicy {
-        REPLACE,
-        IGNORE,
-        APPEND
+        replace,
+        ignore,
+        append
     }
 
     public final static String INI_SECTION_HEADER_REGEX =
@@ -82,12 +83,12 @@ public class Test {
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
-    // File methods
+    // File/command methods
     //--------------------------------------------------------------------------
 
     public void file(String... args) {
         resetConfig();
-        filename = StringUtils.join(args, ' ');
+        filename = joinArgs(args);
         try {
             lines = ConfigUtils.readLinesFromFile(filename);
         } catch (IOException e) {
@@ -99,12 +100,30 @@ public class Test {
 
     public void command(String... args) {
         resetConfig();
-        commandLine = StringUtils.join(args, ' ');
+        commandLine = joinArgs(args);
         lines = ConfigUtils.readLinesFromCommand(args);
     }
 
+    void resetConfig() {
+        filename = null;
+        commandLine = null;
+        sectionName = null;
+        propertyName = null;
+        lines = Collections.EMPTY_LIST;
+        config = new Config();
+        linesParsed = false;
+        columnMap = null;
+        section = Collections.EMPTY_LIST;
+        values = null;
+        duplicatesPolicy = DuplicatesPolicy.append;
+    }
+
+    //--------------------------------------------------------------------------
+    // Syntax methods
+    //--------------------------------------------------------------------------
+
     public void skip_header_lines(String... args) {
-        String nLinesStr = StringUtils.join(args, ' ');
+        String nLinesStr = joinArgs(args);
         try {
             int nLines = Integer.parseInt(nLinesStr);
             config.setSkipHeaderLines(nLines);
@@ -129,66 +148,50 @@ public class Test {
         }
     }
 
-    void resetConfig() {
-        filename = null;
-        commandLine = null;
-        sectionName = null;
-        propertyName = null;
-        lines = Collections.EMPTY_LIST;
-        config = new Config();
-        linesParsed = false;
-        columnMap = null;
-        section = Collections.EMPTY_LIST;
-        values = null;
-        duplicatesPolicy = DuplicatesPolicy.APPEND;
-    }
-
     public void syntax(String... args) {
-        String syntax = StringUtils.join(args, ' ');
+        String syntax = joinArgs(args);
         if ("apache".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.TOKENIZED);
+            config.setParseMode(Config.ParseMode.tokenized);
             config.setSectionHeaderPattern(APACHE_SECTION_HEADER_PATTERN);
             config.setSectionFooterPattern(APACHE_SECTION_FOOTER_PATTERN);
             config.setHashCommentAllowed(true);
         } else if ("apt".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.TOKENIZED);
+            config.setParseMode(Config.ParseMode.tokenized);
             config.setSectionHeaderPattern(APT_SECTION_HEADER_PATTERN);
             config.setSectionFooterPattern(APT_SECTION_FOOTER_PATTERN);
             config.setSeparator(StrMatcher.charSetMatcher(" \t;"));
             config.setSlashCommentAllowed(true);
         } else if ("etc_group".equals(syntax) || "etc_passwd".equals(syntax) ||
                    "etc_shadow".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.TOKENIZED);
+            config.setParseMode(Config.ParseMode.tokenized);
             config.setSeparator(COLON_SEPARATOR);
             config.setHashCommentAllowed(true);
             config.setIgnoreEmptyTokens(false);
         } else if ("etc_hosts".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.TOKENIZED);
+            config.setParseMode(Config.ParseMode.tokenized);
             config.setHashCommentAllowed(true);
         } else if ("fail2ban".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.KEYVALUE);
+            config.setParseMode(Config.ParseMode.keyvalue);
             config.setSectionHeaderPattern(INI_SECTION_HEADER_PATTERN);
             config.setKeySeparator("=");
             config.setHashCommentAllowed(true);
         } else if ("fixed".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.FIXED);
+            config.setParseMode(Config.ParseMode.fixed);
         } else if ("key_value".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.KEYVALUE);
+            config.setParseMode(Config.ParseMode.keyvalue);
         } else if ("ini".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.KEYVALUE);
+            config.setParseMode(Config.ParseMode.keyvalue);
             config.setSectionHeaderPattern(INI_SECTION_HEADER_PATTERN);
             config.setKeySeparator("=");
             config.setKeySeparatorOptional(true);
             config.setHashCommentAllowed(true);
             config.setSemicolonCommentAllowed(true);
         } else if ("ssh".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.TOKENIZED);
+            config.setParseMode(Config.ParseMode.tokenized);
             config.setHashCommentAllowed(true);
         } else if ("swapon".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.TOKENIZED);
+            config.setParseMode(Config.ParseMode.tokenized);
             config.setSkipHeaderLines(1);
-        } else if ("tokenized".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.TOKENIZED);
         } else if ("ufw".equals(syntax)) {
             config = new UfwConfig();
         } else {
@@ -199,19 +202,26 @@ public class Test {
     }
 
     public void key_separator(String... args) {
-        String keySeparator = StringUtils.join(args, ' ');
+        String keySeparator = joinArgs(args);
         config.setKeySeparator(keySeparator);
     }
 
     public void separator(String... args) {
-        String separator = StringUtils.join(args, ' ');
-        config.setSeparator(StrMatcher.stringMatcher(separator));
+        String separator = StringEscapeUtils.unescapeJava(joinArgs(args));
+        config.setSeparator(StrMatcher.charSetMatcher(separator));
     }
 
     public void ignore_empty_tokens(String... args) {
-        String ignoreEmptyTokensStr = StringUtils.join(args, ' ');
+        String ignoreEmptyTokensStr = joinArgs(args);
         boolean ignoreEmptyTokens = Boolean.parseBoolean(ignoreEmptyTokensStr);
         config.setIgnoreEmptyTokens(ignoreEmptyTokens);
+    }
+
+    public void key_separator_optional(String... args) {
+        String keySeparatorOptionalStr = joinArgs(args);
+        boolean keySeparatorOptional =
+                Boolean.parseBoolean(keySeparatorOptionalStr);
+        config.setKeySeparatorOptional(keySeparatorOptional);
     }
 
     public void positions(String... args) {
@@ -230,13 +240,87 @@ public class Test {
         }
     }
 
+    public void parse_mode(String... args) {
+        String modeStr = joinArgs(args);
+        try {
+            Config.ParseMode parseMode = Config.ParseMode.valueOf(modeStr);
+            config.setParseMode(parseMode);
+        } catch (IllegalArgumentException e) {
+            errors++;
+            System.out.println("ERROR: unrecognized parse mode: " + modeStr);
+            System.out.println();
+
+        }
+    }
+
+    public void duplicates_policy(String... args) {
+        String duplicatesPolicyStr = joinArgs(args);
+        try {
+            duplicatesPolicy = DuplicatesPolicy.valueOf(duplicatesPolicyStr);
+        } catch (IllegalArgumentException e) {
+            errors++;
+            System.out.println(
+                    "ERROR: unrecognized duplicates policy: " +
+                    duplicatesPolicyStr
+            );
+            System.out.println();
+        }
+    }
+
+    public void section_header_pattern(String... args) {
+        String regex = joinArgs(args);
+        Pattern pattern = Pattern.compile(regex);
+        config.setSectionHeaderPattern(pattern);
+    }
+
+    public void section_footer_pattern(String... args) {
+        String regex = joinArgs(args);
+        Pattern pattern = Pattern.compile(regex);
+        config.setSectionFooterPattern(pattern);
+    }
+
+    public void hash_comment_allowed(String... args) {
+        String hashCommentAllowedStr = joinArgs(args);
+        boolean hashCommentAllowed =
+                Boolean.parseBoolean(hashCommentAllowedStr);
+        config.setHashCommentAllowed(hashCommentAllowed);
+    }
+
+    public void slash_comment_allowed(String... args) {
+        String slashCommentAllowedStr = joinArgs(args);
+        boolean slashCommentAllowed =
+                Boolean.parseBoolean(slashCommentAllowedStr);
+        config.setSlashCommentAllowed(slashCommentAllowed);
+    }
+
+    public void semicolon_comment_allowed(String... args) {
+        String semicolonCommentAllowedStr = joinArgs(args);
+        boolean semicolonCommentAllowed =
+                Boolean.parseBoolean(semicolonCommentAllowedStr);
+        config.setSemicolonCommentAllowed(semicolonCommentAllowed);
+    }
+
+    public void quote_char(String... args) {
+        String quoteCharStr = joinArgs(args);
+        if (quoteCharStr.length() == 1) {
+            config.setQuoteChar(quoteCharStr.charAt(0));
+        } else {
+            errors++;
+            System.out.println(
+                    "ERROR: illegal quote char: " + quoteCharStr
+            );
+            System.out.println();
+
+        }
+    }
+
     //--------------------------------------------------------------------------
     // Section methods
     //--------------------------------------------------------------------------
 
     public void section(String... args) {
         ensureConfigInitialized();
-        sectionName = StringUtils.join(args, ' ');
+        sectionName = joinArgs(args);
         section = config.getSection(sectionName);
         if (section == null) {
             errors++;
@@ -259,7 +343,7 @@ public class Test {
     public void property(String... args) {
         ensureConfigInitialized();
         values = null;
-        propertyName = StringUtils.join(args, ' ');
+        propertyName = joinArgs(args);
         boolean first = true;
         for (String[] line : section) {
             String firstColumn = getMappedColumn(line, 0);
@@ -270,9 +354,9 @@ public class Test {
                     values = lineValues;
                 } else {
                     switch (duplicatesPolicy) {
-                        case REPLACE:
+                        case replace:
                             values = lineValues;
-                        case APPEND:
+                        case append:
                             values = ArrayUtils.addAll(values, lineValues);
                             break;
                         default:
@@ -340,7 +424,7 @@ public class Test {
 
     public void assert_empty(String... args) {
         assertionsTested++;
-        String joinedValues = StringUtils.join(values, ' ');
+        String joinedValues = joinArgs(values);
         if (StringUtils.isNotEmpty(joinedValues)) {
             assertionFailed("assert_empty");
         }
@@ -348,7 +432,7 @@ public class Test {
 
     public void assert_not_empty(String... args) {
         assertionsTested++;
-        String joinedValues = StringUtils.join(values, ' ');
+        String joinedValues = joinArgs(values);
         if (StringUtils.isEmpty(joinedValues)) {
             assertionFailed("assert_not_empty");
         }
@@ -382,8 +466,8 @@ public class Test {
 
     public void assert_starts_with(String... args) {
         assertionsTested++;
-        String joinedValues = StringUtils.join(values, ' ');
-        String joinedArgs = StringUtils.join(values, ' ');
+        String joinedValues = joinArgs(values);
+        String joinedArgs = joinArgs(values);
         if (!StringUtils.startsWith(joinedValues, joinedArgs)) {
             assertionFailed("assert_starts_with", args);
         }
@@ -391,8 +475,8 @@ public class Test {
 
     public void assert_ends_with(String... args) {
         assertionsTested++;
-        String joinedValues = StringUtils.join(values, ' ');
-        String joinedArgs = StringUtils.join(values, ' ');
+        String joinedValues = joinArgs(values);
+        String joinedArgs = joinArgs(values);
         if (!StringUtils.endsWith(joinedValues, joinedArgs)) {
             assertionFailed("assert_ends_with", args);
         }
@@ -421,17 +505,25 @@ public class Test {
         } else {
             System.out.println(
                     String.format(
-                            " Value:     %s", StringUtils.join(values, ' ')
+                            " Value:     %s", joinArgs(values)
                     )
             );
         }
 
         System.out.println(
                 String.format(
-                        " Assertion: %s %s", cmd, StringUtils.join(args, ' ')
+                        " Assertion: %s %s", cmd, joinArgs(args)
                 )
         );
         System.out.println();
+    }
+
+    //--------------------------------------------------------------------------
+    // Utility methods
+    //--------------------------------------------------------------------------
+
+    public static String joinArgs(String... args) {
+        return StringUtils.join(args, ' ');
     }
 
     //--------------------------------------------------------------------------
