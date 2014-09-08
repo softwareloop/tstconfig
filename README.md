@@ -70,3 +70,4 @@ on the tests that failed:
 ### Documentation
 
 * [Tstconfig introdution](http://softwareloop.com/tstconfig-automatic-configuration-testing-for-fun-and-security/)
+* [Installing and running](http://softwareloop.com/installing-and-running-tstconfig/)
