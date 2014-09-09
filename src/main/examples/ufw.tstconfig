@@ -2,13 +2,16 @@
 # Test that the firewall is enabled and configured for ssh/http/https
 ################################################################################
 
+## Header section
+
 # The command to retrieve the firewall status
 command sudo /usr/sbin/ufw status verbose
 
-# The syntax for parsing
-syntax ufw
-
-## Header section
+# To read the header section, process only the first four lines
+read_lines 4
+# syntax for parsing
+parse_mode keyvalue
+key_separator :
 
 # Check that the firewall is active
 property Status
@@ -19,7 +22,13 @@ property Default
 assert_eq "deny (incoming), allow (outgoing), disabled (routed)"
 
 ## Now move to the rules section
-section rules
+# re-read the configuration
+command sudo /usr/sbin/ufw status verbose
+# this time skipping the first 7 lines
+skip_header_lines 7
+# a fixed-positions table
+parse_mode fixed
+positions 27 39
 
 # Check that ssh is limited
 property 22

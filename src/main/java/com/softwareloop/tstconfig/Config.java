@@ -52,7 +52,8 @@ public class Config {
     // Fields
     //--------------------------------------------------------------------------
 
-    int skipHeaderLines = 0;
+    int     skipHeaderLines = 0;
+    Integer readLines       = null;
 
     boolean hashCommentAllowed      = DEFAULT_HASH_COMMENT_ALLOWED;
     boolean slashCommentAllowed     = DEFAULT_SLASH_COMMENT_ALLOWED;
@@ -61,7 +62,7 @@ public class Config {
     Pattern sectionHeaderPattern;
     Pattern sectionFooterPattern;
 
-    String keySeparator;
+    String keySeparator = null;
     boolean    keySeparatorOptional = DEFAULT_KEY_SEPARATOR_OPTIONAL;
     StrMatcher separator            = DEFAULT_SEPARATOR;
     boolean    ignoreEmptyTokens    = DEFAULT_IGNORE_EMPTY_TOKENS;
@@ -102,15 +103,22 @@ public class Config {
         }
 
         for (String line : lines) {
+            if (skipHeaderLines > 0) {
+                skipHeaderLines = skipHeaderLines - 1;
+                continue;
+            }
+            if (readLines != null) {
+                if (readLines <= 0) {
+                    continue;
+                } else {
+                    readLines = readLines - 1;
+                }
+            }
             parseLine(line);
         }
     }
 
     public void parseLine(String line) {
-        if (skipHeaderLines > 0) {
-            skipHeaderLines = skipHeaderLines - 1;
-            return;
-        }
         if (isBlankLine(line)) {
             parseBlankLine(line);
         } else if (isCommentLine(line)) {
@@ -315,6 +323,14 @@ public class Config {
 
     public void setSkipHeaderLines(int skipHeaderLines) {
         this.skipHeaderLines = skipHeaderLines;
+    }
+
+    public Integer getReadLines() {
+        return readLines;
+    }
+
+    public void setReadLines(Integer readLines) {
+        this.readLines = readLines;
     }
 
     public StrMatcher getSeparator() {

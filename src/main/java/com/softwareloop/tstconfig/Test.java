@@ -134,6 +134,21 @@ public class Test {
         }
     }
 
+    public void read_lines(String... args) {
+        String nLinesStr = joinArgs(args);
+        try {
+            Integer nLines = null;
+            if (!nLinesStr.isEmpty()) {
+                nLines = Integer.parseInt(nLinesStr);
+            }
+            config.setReadLines(nLines);
+        } catch (NumberFormatException e) {
+            errors++;
+            System.out.println("ERROR: not a number: " + nLinesStr);
+            System.out.println();
+        }
+    }
+
     public void columns(String... args) {
         columnMap = new int[args.length];
         for (int i = 0; i < args.length; i++) {
@@ -174,8 +189,6 @@ public class Test {
             config.setKeySeparatorOptional(true);
             config.setHashCommentAllowed(true);
             config.setSemicolonCommentAllowed(true);
-        } else if ("ufw".equals(syntax)) {
-            config = new UfwConfig();
         } else {
             errors++;
             System.out.println("ERROR: unrecognized syntax: " + syntax);
