@@ -316,7 +316,11 @@ public class Test {
     public void section(String... args) {
         ensureConfigInitialized();
         sectionName = joinArgs(args);
-        section = config.getSection(sectionName);
+        if (args.length == 0) {
+            section = config.getTopLevelSection();
+        } else {
+            section = config.getSection(sectionName);
+        }
         if (section == null) {
             errors++;
             System.out.println("ERROR: section is undefined: " + sectionName);
