@@ -6,7 +6,8 @@
 command sudo swapon -s
 
 # The syntax for parsing
-syntax swapon
+parse_mode tokenized
+skip_header_lines 1
 
 # We're interested in Filename, Type, Size and Priority
 columns 0 1 2 4

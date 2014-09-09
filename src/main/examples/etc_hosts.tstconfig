@@ -6,7 +6,8 @@
 file /etc/hosts
 
 # The syntax to use
-syntax etc_hosts
+parse_mode tokenized
+hash_comment_allowed true
 
 # Test localhost
 property 127.0.0.1

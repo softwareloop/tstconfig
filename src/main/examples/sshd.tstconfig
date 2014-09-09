@@ -6,7 +6,8 @@
 file /etc/ssh/sshd_config
 
 # The syntax for parsing
-syntax ssh
+parse_mode tokenized
+hash_comment_allowed true
 
 # Check that root cannot login via ssh
 property PermitRootLogin

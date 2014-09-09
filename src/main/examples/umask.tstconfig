@@ -7,7 +7,7 @@
 command bash -c umask
 
 # The syntax for parsing
-syntax tokenized
+parse_mode tokenized
 
 # The output is really just a string. Treat it as a property
 property 0022

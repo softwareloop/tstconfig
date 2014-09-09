@@ -27,7 +27,7 @@ public class Test {
         append
     }
 
-    public final static String INI_SECTION_HEADER_REGEX =
+    public final static String  INI_SECTION_HEADER_REGEX   =
             "^\\s*\\[(.*)\\]\\s*$";
     public final static Pattern INI_SECTION_HEADER_PATTERN =
             Pattern.compile(INI_SECTION_HEADER_REGEX);
@@ -57,18 +57,18 @@ public class Test {
     // Fields
     //--------------------------------------------------------------------------
 
-    List<String> lines;
-    boolean      linesParsed;
-    int[]        columnMap;
+    List<String>     lines;
+    boolean          linesParsed;
+    int[]            columnMap;
     DuplicatesPolicy duplicatesPolicy;
 
-    String   filename;
-    String   commandLine;
-    Config   config;
-    String   sectionName;
+    String         filename;
+    String         commandLine;
+    Config         config;
+    String         sectionName;
     List<String[]> section;
-    String   propertyName;
-    String[] values;
+    String         propertyName;
+    String[]       values;
 
     int assertionsTested;
     int assertionsFailed;
@@ -167,18 +167,6 @@ public class Test {
             config.setSeparator(COLON_SEPARATOR);
             config.setHashCommentAllowed(true);
             config.setIgnoreEmptyTokens(false);
-        } else if ("etc_hosts".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.tokenized);
-            config.setHashCommentAllowed(true);
-        } else if ("fail2ban".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.keyvalue);
-            config.setSectionHeaderPattern(INI_SECTION_HEADER_PATTERN);
-            config.setKeySeparator("=");
-            config.setHashCommentAllowed(true);
-        } else if ("fixed".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.fixed);
-        } else if ("key_value".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.keyvalue);
         } else if ("ini".equals(syntax)) {
             config.setParseMode(Config.ParseMode.keyvalue);
             config.setSectionHeaderPattern(INI_SECTION_HEADER_PATTERN);
@@ -186,12 +174,6 @@ public class Test {
             config.setKeySeparatorOptional(true);
             config.setHashCommentAllowed(true);
             config.setSemicolonCommentAllowed(true);
-        } else if ("ssh".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.tokenized);
-            config.setHashCommentAllowed(true);
-        } else if ("swapon".equals(syntax)) {
-            config.setParseMode(Config.ParseMode.tokenized);
-            config.setSkipHeaderLines(1);
         } else if ("ufw".equals(syntax)) {
             config = new UfwConfig();
         } else {

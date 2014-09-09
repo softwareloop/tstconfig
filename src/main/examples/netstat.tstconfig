@@ -5,10 +5,8 @@
 # The command to retrieve the list of listening ports
 command sudo netstat -plnt
 
-# the syntax for parsing
-syntax fixed
-
 # a fixed-position table
+parse_mode fixed
 positions 6 13 20 44 68 80
 
 # Ignore the first two header lines

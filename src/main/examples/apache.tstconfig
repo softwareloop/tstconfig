@@ -38,7 +38,7 @@ assert_eq index.php index.html index.cgi index.pl index.xhtml index.htm
 command sudo apache2ctl -M
 
 # The syntax to use
-syntax tokenized
+parse_mode tokenized
 
 # Skip the first header line
 skip_header_lines 1
