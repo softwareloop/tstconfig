@@ -240,15 +240,17 @@ public class Config {
     }
 
     public void parseFixed(String line) {
-        String[] values = new String[positions.length + 1];
-        int start = 0;
-        int i = 0;
-        for (; i < positions.length; i++) {
-            int stop = positions[i];
+        String[] values = new String[positions.length];
+        for (int i = 0; i < positions.length - 1; i++) {
+            int start = positions[i];
+            int stop = positions[i + 1];
             values[i] = line.substring(start, stop).trim();
-            start = stop;
         }
-        values[i] = line.substring(start).trim();
+        if (positions.length > 0) {
+            int i = positions.length - 1;
+            int start = positions[i];
+            values[i] = line.substring(start).trim();
+        }
         storeLine(values);
     }
 

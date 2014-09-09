@@ -28,7 +28,7 @@ command sudo /usr/sbin/ufw status verbose
 skip_header_lines 7
 # a fixed-positions table
 parse_mode fixed
-positions 27 39
+positions 0 27 39
 
 # Check that ssh is limited
 property 22
