@@ -1,7 +1,6 @@
 package com.softwareloop.tstconfig;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrMatcher;
@@ -67,7 +66,7 @@ public class Test {
     Config         config;
     String         sectionName;
     List<String[]> section;
-    String         propertyName;
+    String[] propertyNames;
     String[]       values;
 
     int assertionsTested;
@@ -108,7 +107,7 @@ public class Test {
         filename = null;
         commandLine = null;
         sectionName = null;
-        propertyName = null;
+        propertyNames = null;
         lines = Collections.EMPTY_LIST;
         config = new Config();
         linesParsed = false;
@@ -342,12 +341,12 @@ public class Test {
     public void property(String... args) {
         ensureConfigInitialized();
         values = null;
-        propertyName = joinArgs(args);
+        propertyNames = args;
         boolean first = true;
         for (String[] line : section) {
-            String firstColumn = getMappedColumn(line, 0);
-            if (ObjectUtils.equals(propertyName, firstColumn)) {
-                String[] lineValues = extractValues(line);
+            String[] firstColumns = getFirstMappedColumns(line, args.length);
+            if (Arrays.equals(args, firstColumns)) {
+                String[] lineValues = getLastMappedColumns(args.length, line);
                 if (first) {
                     first = false;
                     values = lineValues;
@@ -355,27 +354,50 @@ public class Test {
                     switch (duplicatesPolicy) {
                         case replace:
                             values = lineValues;
+                            break;
                         case append:
                             values = ArrayUtils.addAll(values, lineValues);
                             break;
-                        default:
+                        case ignore:
                             /* IGNORE DUPLICATE */
+                            break;
+                        default:
+                            throw new IllegalStateException(
+                                    "Illegal duplicate policy: " +
+                                    duplicatesPolicy
+                            );
                     }
                 }
             }
         }
     }
 
-    public String[] extractValues(String[] current) {
+    public String[] getLastMappedColumns(int startFrom, String[] current) {
         if (columnMap == null) {
-            return Arrays.copyOfRange(current, 1, current.length);
+            return Arrays.copyOfRange(current, startFrom, current.length);
         } else {
-            String[] result = new String[columnMap.length - 1];
-            for (int i = 1; i < columnMap.length; i++) {
-                result[i - 1] = getMappedColumn(current, i);
+            String[] result = new String[columnMap.length - startFrom];
+            for (int i = startFrom; i < columnMap.length; i++) {
+                result[i - startFrom] = getMappedColumn(current, i);
             }
             return result;
         }
+    }
+
+    public String[] getFirstMappedColumns(String[] array, int n) {
+        String[] result = new String[n];
+        for (int i = 0; i < n; i++) {
+            result[i] = getMappedColumn(array, i);
+        }
+        return result;
+    }
+
+    public String[] getMappedColumns(String[] array, int... indexes) {
+        String[] result = new String[indexes.length];
+        for (int i = 0; i < indexes.length; i++) {
+            result[i] = getMappedColumn(array, indexes[i]);
+        }
+        return result;
     }
 
     public String getMappedColumn(String[] array, int index) {
@@ -495,8 +517,12 @@ public class Test {
             System.out.println(String.format(" Section:   %s", sectionName));
         }
 
-        if (propertyName != null) {
-            System.out.println(String.format(" Property:  %s", propertyName));
+        if (propertyNames != null) {
+            System.out.println(
+                    String.format(
+                            " Property:  %s", joinArgs(propertyNames)
+                    )
+            );
         }
 
         if (values == null) {
