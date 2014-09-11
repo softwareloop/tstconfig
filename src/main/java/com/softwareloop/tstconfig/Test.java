@@ -330,7 +330,7 @@ public class Test {
 
     public void section_size(String... args) {
         ensureConfigInitialized();
-        propertyNames = null
+        propertyNames = null;
         values = new String[1];
         values[0] = Integer.toString(section.size());
     }

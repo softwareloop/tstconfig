@@ -6,7 +6,7 @@
 file /etc/fail2ban/jail.conf
 
 # The syntax for parsing
-syntax fail2ban
+syntax ini
 
 # Select the ssh section
 section ssh

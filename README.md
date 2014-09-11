@@ -27,7 +27,8 @@ In `examples/sshd.tstconfig`:
     file /etc/ssh/sshd_config
     
     # The syntax for parsing
-    syntax ssh
+    parse_mode tokenized
+    hash_comment_allowed true
     
     # Check that root cannot login via ssh
     property PermitRootLogin
@@ -43,7 +44,7 @@ Tstconfig's output is a report of the tests that passed or failed, with details
 on the tests that failed:
 
     $ tstconfig examples/sshd.tstconfig
-    Tstconfig 0.1
+    Tstconfig 0.2
     
     Reading definition file: examples/sshd.tstconfig
     ASSERTION FAILED

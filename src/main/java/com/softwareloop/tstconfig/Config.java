@@ -228,7 +228,7 @@ public class Config {
         if (separator == null) {
             values = new String[]{valueString};
         } else {
-            StrTokenizer tokenizer = new StrTokenizer(valueString, separator);
+            StrTokenizer tokenizer = createStrTokenizer(valueString);
             values = tokenizer.getTokenArray();
         }
 
@@ -255,12 +255,18 @@ public class Config {
     }
 
     public void parseTokenized(String line) {
-        StrTokenizer tokenizer = new StrTokenizer(line, separator);
-        tokenizer.setIgnoreEmptyTokens(ignoreEmptyTokens);
-        tokenizer.setQuoteChar(quoteChar);
+        StrTokenizer tokenizer = createStrTokenizer(line);
         String[] tokens = tokenizer.getTokenArray();
         storeLine(tokens);
     }
+
+    public StrTokenizer createStrTokenizer(String valueString) {
+        StrTokenizer tokenizer = new StrTokenizer(valueString, separator);
+        tokenizer.setIgnoreEmptyTokens(ignoreEmptyTokens);
+        tokenizer.setQuoteChar(quoteChar);
+        return tokenizer;
+    }
+
 
     //--------------------------------------------------------------------------
     // Getters/setters
