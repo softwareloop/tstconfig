@@ -70,5 +70,7 @@ on the tests that failed:
 
 ### Documentation
 
-* [Tstconfig introdution](http://softwareloop.com/tstconfig-automatic-configuration-testing-for-fun-and-security/)
+* [Tstconfig introduction](http://softwareloop.com/tstconfig-automatic-configuration-testing-for-fun-and-security/)
 * [Installing and running](http://softwareloop.com/installing-and-running-tstconfig/)
+* [Tstconfig by example: ufw](http://softwareloop.com/tstconfig-by-example-ufw/)
+* [Tstconfig by example: fail2ban](http://softwareloop.com/tstconfig-by-example-fail2ban/)
