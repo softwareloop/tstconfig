@@ -74,3 +74,4 @@ on the tests that failed:
 * [Installing and running](http://softwareloop.com/installing-and-running-tstconfig/)
 * [Tstconfig by example: ufw](http://softwareloop.com/tstconfig-by-example-ufw/)
 * [Tstconfig by example: fail2ban](http://softwareloop.com/tstconfig-by-example-fail2ban/)
+* [Tstconfig by example: /etc/passwd /etc/shadow and /etc/group](http://softwareloop.com/testing-etcpasswd-etcshadow-and-etcgroup/)
