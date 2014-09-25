@@ -75,3 +75,4 @@ on the tests that failed:
 * [Tstconfig by example: ufw](http://softwareloop.com/tstconfig-by-example-ufw/)
 * [Tstconfig by example: fail2ban](http://softwareloop.com/tstconfig-by-example-fail2ban/)
 * [Tstconfig by example: /etc/passwd /etc/shadow and /etc/group](http://softwareloop.com/testing-etcpasswd-etcshadow-and-etcgroup/)
+* [Tstconfig by example: netstat](http://softwareloop.com/testing-what-ports-are-open-with-netstat-and-tstconfig/)
