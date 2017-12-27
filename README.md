@@ -1,5 +1,4 @@
-Tstconfig description
-====================
+# Tstconfig description
 
 Tstconfig is a system administration tool that tests (a large number of)
 configuration files automatically. Tstconfig looks at the configurations, checks
@@ -70,9 +69,9 @@ on the tests that failed:
 
 ### Documentation
 
-* [Tstconfig introduction](http://softwareloop.com/tstconfig-automatic-configuration-testing-for-fun-and-security/)
-* [Installing and running](http://softwareloop.com/installing-and-running-tstconfig/)
-* [Tstconfig by example: ufw](http://softwareloop.com/tstconfig-by-example-ufw/)
-* [Tstconfig by example: fail2ban](http://softwareloop.com/tstconfig-by-example-fail2ban/)
-* [Tstconfig by example: /etc/passwd /etc/shadow and /etc/group](http://softwareloop.com/testing-etcpasswd-etcshadow-and-etcgroup/)
-* [Tstconfig by example: netstat](http://softwareloop.com/testing-what-ports-are-open-with-netstat-and-tstconfig/)
+* [Tstconfig introduction](https://github.com/softwareloop/tstconfig/wiki)
+* [Installing and running](https://github.com/softwareloop/tstconfig/wiki/Installing-and-running)
+* [Example: ufw](https://github.com/softwareloop/tstconfig/wiki/Example-for-ufw)
+* [Example: fail2ban](https://github.com/softwareloop/tstconfig/wiki/Example-for-fail2ban)
+* [Example: /etc/passwd /etc/shadow and /etc/group](https://github.com/softwareloop/tstconfig/wiki/Example-for-etcpasswd-etcshadow-and-etcgroup)
+* [Example: netstat](https://github.com/softwareloop/tstconfig/wiki/Example-for-netstat)
