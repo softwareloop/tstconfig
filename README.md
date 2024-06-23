@@ -43,7 +43,7 @@ Tstconfig's output is a report of the tests that passed or failed, with details
 on the tests that failed:
 
     $ tstconfig examples/sshd.tstconfig
-    Tstconfig 0.2
+    Tstconfig 0.3
     
     Reading definition file: examples/sshd.tstconfig
     ASSERTION FAILED

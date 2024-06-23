@@ -1,7 +1,6 @@
-<assembly
-        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 http://maven.apache.org/xsd/assembly-2.2.0.xsd">
     <id>bin</id>
     <formats>
         <format>tar.gz</format>
@@ -9,6 +8,7 @@
     </formats>
     <fileSets>
         <fileSet>
+            <!-- copy the readme to / -->
             <directory>${project.basedir}</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
@@ -18,6 +18,7 @@
             <fileMode>0644</fileMode>
         </fileSet>
         <fileSet>
+            <!-- copy the executable script to / -->
             <directory>${project.basedir}/src/main/bin</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
@@ -26,16 +27,25 @@
             <fileMode>0755</fileMode>
         </fileSet>
         <fileSet>
+            <!-- copy the examples to /examples -->
             <directory>${project.basedir}/src/main/examples</directory>
             <outputDirectory>/examples</outputDirectory>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
         </fileSet>
+        <fileSet>
+            <!-- copy the main jar under /lib -->
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>/lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
     </fileSets>
     <dependencySets>
         <dependencySet>
+            <!-- copy the dependencies under /lib -->
             <outputDirectory>/lib</outputDirectory>
-            <useProjectArtifact>true</useProjectArtifact>
             <scope>runtime</scope>
         </dependencySet>
     </dependencySets>
